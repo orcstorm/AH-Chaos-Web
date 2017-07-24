@@ -1,5 +1,17 @@
-@()
+@import helper._
+@import Protocol._
 
-@main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+@(pullForm: Form[PullData])(implicit messages: Messages)
+
+@main("Arkham Horror Chaos Bag Sim") {
+  <h1>Arkham Horror Chaos Bag Sim</h1>
+
+  @helper.form(action = routes.HomeController.pull()) {
+
+  	@helper.inputText(pullForm("campaign"))
+	@helper.inputText(pullForm("difficulty"))
+	<input type="submit" value="Pull A Token" />
+  }
+
+
 }
