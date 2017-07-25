@@ -7,6 +7,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 import play.api.i18n.I18nSupport
+import helpers._
 
 object Protocol {
   case class PullData(campaign: String, difficulty: String)
@@ -25,19 +26,24 @@ class HomeController @Inject()(cc: ControllerComponents)(messages: MessagesApi) 
 
 
   def index() = Action { implicit request: Request[AnyContent] =>
+    
     Ok(views.html.index(pullForm))
   }
 
   def pull() = Action { implicit request =>
-      pullForm.bindFromRequest.fold(
+    import helpers._
+
+
+    pullForm.bindFromRequest.fold(
        formWithErrors => {
          Ok("nope")
        },
       
       data => {
-        Ok(s"${data.campaign} ${data.difficulty}")
+        val token = ArkhamChaos.pullToken(data.campaign, data.difficulty)
+        Redirect("/").flashing("token" -> token)
       }  
-      )
+    )
   }
 }
 

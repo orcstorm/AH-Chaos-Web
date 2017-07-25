@@ -1,17 +1,37 @@
 @import helper._
 @import Protocol._
 
-@(pullForm: Form[PullData])(implicit messages: Messages)
+@(pullForm: Form[PullData])(implicit messages: Messages, flash: Flash)
+
 
 @main("Arkham Horror Chaos Bag Sim") {
   <h1>Arkham Horror Chaos Bag Sim</h1>
 
   @helper.form(action = routes.HomeController.pull()) {
 
-  	@helper.inputText(pullForm("campaign"))
-	@helper.inputText(pullForm("difficulty"))
+	@select(
+	  field = pullForm("campaign"),
+	  options = Seq(
+		  "zealot" -> "Night of the Zealot",
+      "dunwich" -> "The Dunwich Legacy"
+    ),
+   '_default -> "Choose One"
+  )
+
+  @select(
+    field = pullForm("difficulty"),
+    options = Seq(
+      "easy" -> "Easy",
+      "standard" -> "Standard",
+      "hard" -> "Hard",
+      "expert" -> "Expert"
+    ),
+   '_default -> "Choose One"
+  )
+
+
 	<input type="submit" value="Pull A Token" />
   }
 
-
+  @flash
 }
