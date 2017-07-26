@@ -12,30 +12,30 @@
   <table class="table">
     <tr>
       <td>
-				@select(
-				  field = pullForm("campaign"),
-				  options = Seq(
-					  "zealot" -> "Night of the Zealot",
-			      "dunwich" -> "The Dunwich Legacy"
-			    )
-		    )
-		    </td>
-		    <td>
-		    @select(
-		      field = pullForm("difficulty"),
-		      options = Seq(
-		        "easy" -> "Easy",
-		        "standard" -> "Standard",
-		        "hard" -> "Hard",
-		        "expert" -> "Expert"
-		      )
-		    )
-		  </td>
-		</tr>
-	</table>
+        @select(
+          field = pullForm("campaign"),
+          options = Seq(
+            "zealot" -> "Night of the Zealot",
+            "dunwich" -> "The Dunwich Legacy"
+          )
+        )
+        </td>
+        <td>
+        @select(
+          field = pullForm("difficulty"),
+          options = Seq(
+            "easy" -> "Easy",
+            "standard" -> "Standard",
+            "hard" -> "Hard",
+            "expert" -> "Expert"
+          )
+        )
+      </td>
+    </tr>
+  </table>
 
 
-	<input type="submit" value="Pull A Token" class="btn btn-primary" />
+  <input type="submit" value="Pull A Token" class="btn btn-primary" />
   }
 
   @{
