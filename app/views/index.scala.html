@@ -1,46 +1,62 @@
 @import helper._
 @import Protocol._
 
-@(pullForm: Form[PullData], campaign: Option[String], difficulty: Option[String])(implicit messages: Messages, flash: Flash, session: play.api.mvc.Session)
+@(pullForm: Form[PullData])(implicit messages: Messages, flash: Flash, session: play.api.mvc.Session)
 
 
 @main("Arkham Horror Chaos Bag Sim") {
   <h1>Arkham Horror Chaos Bag Sim</h1>
 
-  @helper.form(action = routes.ChaosController.pull()) {
+  
 
-  <table class="table">
-    <tr>
-      <td>
-        @select(
-          field = pullForm("campaign"),
-          options = Seq(
-            "zealot" -> "Night of the Zealot",
-            "dunwich" -> "The Dunwich Legacy"
-          )
-        )
-        </td>
-        <td>
-        @select(
-          field = pullForm("difficulty"),
-          options = Seq(
-            "easy" -> "Easy",
-            "standard" -> "Standard",
-            "hard" -> "Hard",
-            "expert" -> "Expert"
-          )
-        )
-      </td>
-    </tr>
-  </table>
+  @session.get("campaign") match {
+    case None => {
+      @helper.form(action = routes.ChaosController.pull()) {
+        <table class="table">
+          <tr>
+            <td>
+              @select(
+                field = pullForm("campaign"),
+                options = Seq(
+                  "zealot" -> "Night of the Zealot",
+                  "dunwich" -> "The Dunwich Legacy"
+                )
+              )
+              </td>
+              <td>
+              @select(
+                field = pullForm("difficulty"),
+                options = Seq(
+                  "easy" -> "Easy",
+                  "standard" -> "Standard",
+                  "hard" -> "Hard",
+                  "expert" -> "Expert"
+                )
+              )
+            </td>
+          </tr>
+        </table>
+        <input type="submit" value="Pull A Token" class="btn btn-primary" />
+      }
+    }
 
-
-  <input type="submit" value="Pull A Token" class="btn btn-primary" />
+    case token: Some[String] => {
+      <h2>Campaign: @{ session("campaign") }</h2>
+      <h2>Difficulty: @{ session("difficulty") }</h2>
+      @helper.form(action = routes.ChaosController.pull()){
+        <input type="hidden" name="campaign" value = @{session("campaign")} />
+        <input type="hidden" name="difficulty" value = @{session("difficulty")} />
+        <input type="submit" value="Pull A Token" class="btn btn-primary" />
+      }
+      <br/>
+      <a href="@{routes.ChaosController.reset}" class="btn btn-primary">Change Campaign/Difficulty</a>
+    }
   }
+
 
   @{
     flash.get("token") match {
-      case e: Some[String] => <h1>Token Pulled: {e.get}</h1>
+      case token: Some[String] => <h1>Token Pulled: {token.get}</h1>
       case None =>
     }
   }

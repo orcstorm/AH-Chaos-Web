@@ -29,7 +29,11 @@ class ChaosController @Inject()(cc: ControllerComponents)(messages: MessagesApi)
     val campaign = request.session.get("campaign")
     val difficulty = request.session.get("difficulty")
 
-    Ok(views.html.index(pullForm, campaign, difficulty))
+    Ok(views.html.index(pullForm))
+  }
+
+  def reset() = Action { implicit request =>
+    Redirect("/").withSession()
   }
 
   def pull() = Action { implicit request =>
@@ -38,7 +42,9 @@ class ChaosController @Inject()(cc: ControllerComponents)(messages: MessagesApi)
 
     pullForm.bindFromRequest.fold(
        formWithErrors => {
-         Ok("nope")
+          println(formWithErrors)
+          Redirect("/").withSession()
+          
        },
       
       data => {
