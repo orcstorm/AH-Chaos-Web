@@ -1,37 +1,48 @@
 @import helper._
 @import Protocol._
 
-@(pullForm: Form[PullData])(implicit messages: Messages, flash: Flash)
+@(pullForm: Form[PullData], campaign: Option[String], difficulty: Option[String])(implicit messages: Messages, flash: Flash, session: play.api.mvc.Session)
 
 
 @main("Arkham Horror Chaos Bag Sim") {
   <h1>Arkham Horror Chaos Bag Sim</h1>
 
-  @helper.form(action = routes.HomeController.pull()) {
+  @helper.form(action = routes.ChaosController.pull()) {
 
-	@select(
-	  field = pullForm("campaign"),
-	  options = Seq(
-		  "zealot" -> "Night of the Zealot",
-      "dunwich" -> "The Dunwich Legacy"
-    ),
-   '_default -> "Choose One"
-  )
+  <table class="table">
+    <tr>
+      <td>
+				@select(
+				  field = pullForm("campaign"),
+				  options = Seq(
+					  "zealot" -> "Night of the Zealot",
+			      "dunwich" -> "The Dunwich Legacy"
+			    )
+		    )
+		    </td>
+		    <td>
+		    @select(
+		      field = pullForm("difficulty"),
+		      options = Seq(
+		        "easy" -> "Easy",
+		        "standard" -> "Standard",
+		        "hard" -> "Hard",
+		        "expert" -> "Expert"
+		      )
+		    )
+		  </td>
+		</tr>
+	</table>
 
-  @select(
-    field = pullForm("difficulty"),
-    options = Seq(
-      "easy" -> "Easy",
-      "standard" -> "Standard",
-      "hard" -> "Hard",
-      "expert" -> "Expert"
-    ),
-   '_default -> "Choose One"
-  )
 
-
-	<input type="submit" value="Pull A Token" />
+	<input type="submit" value="Pull A Token" class="btn btn-primary" />
   }
 
-  @flash
+  @{
+    flash.get("token") match {
+      case e: Some[String] => <h1>Token Pulled: {e.get}</h1>
+      case None =>
+    }
+  }
+
 }

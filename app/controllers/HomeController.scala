@@ -7,14 +7,14 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.i18n.MessagesApi
 import play.api.i18n.I18nSupport
-import helpers._
+import helpers.ArkhamChaos
 
 object Protocol {
   case class PullData(campaign: String, difficulty: String)
 }
 
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents)(messages: MessagesApi) extends AbstractController(cc) with I18nSupport {
+class ChaosController @Inject()(cc: ControllerComponents)(messages: MessagesApi) extends AbstractController(cc) with I18nSupport {
 
   import Protocol._
   
@@ -25,9 +25,11 @@ class HomeController @Inject()(cc: ControllerComponents)(messages: MessagesApi) 
     (PullData.apply)(PullData.unapply))
 
 
-  def index() = Action { implicit request: Request[AnyContent] =>
-    
-    Ok(views.html.index(pullForm))
+  def index() = Action { implicit request: Request[AnyContent] => 
+    val campaign = request.session.get("campaign")
+    val difficulty = request.session.get("difficulty")
+
+    Ok(views.html.index(pullForm, campaign, difficulty))
   }
 
   def pull() = Action { implicit request =>
@@ -41,7 +43,7 @@ class HomeController @Inject()(cc: ControllerComponents)(messages: MessagesApi) 
       
       data => {
         val token = ArkhamChaos.pullToken(data.campaign, data.difficulty)
-        Redirect("/").flashing("token" -> token)
+        Redirect("/").flashing("token" -> token).withSession("campaign" -> data.campaign, "difficulty" -> data.difficulty)
       }  
     )
   }
