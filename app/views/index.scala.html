@@ -7,8 +7,6 @@
 @main("Arkham Horror Chaos Bag Sim") {
   <h1>Arkham Horror Chaos Bag Sim</h1>
 
-  
-
   @session.get("campaign") match {
     case None => {
       @helper.form(action = routes.ChaosController.pull()) {

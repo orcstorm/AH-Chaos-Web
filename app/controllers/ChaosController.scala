@@ -5,9 +5,8 @@ import play.api._
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
-import play.api.i18n.MessagesApi
-import play.api.i18n.I18nSupport
-import helpers.ArkhamChaos
+import play.api.i18n.{ MessagesApi, I18nSupport }
+import helpers.ArkhamChaosBag 
 
 object Protocol {
   case class PullData(campaign: String, difficulty: String)
@@ -25,20 +24,13 @@ class ChaosController @Inject()(cc: ControllerComponents)(messages: MessagesApi)
     (PullData.apply)(PullData.unapply))
 
 
-  def index() = Action { implicit request: Request[AnyContent] => 
-    val campaign = request.session.get("campaign")
-    val difficulty = request.session.get("difficulty")
+  def index() = Action { implicit request: Request[AnyContent] => Ok(views.html.index(pullForm)) }
 
-    Ok(views.html.index(pullForm))
-  }
-
-  def reset() = Action { implicit request =>
-    Redirect("/").withSession()
-  }
+  def reset() = Action { implicit request => Redirect("/").withSession() }
 
   def pull() = Action { implicit request =>
+    
     import helpers._
-
 
     pullForm.bindFromRequest.fold(
        formWithErrors => {
@@ -48,7 +40,7 @@ class ChaosController @Inject()(cc: ControllerComponents)(messages: MessagesApi)
        },
       
       data => {
-        val token = ArkhamChaos.pullToken(data.campaign, data.difficulty)
+        val token = ArkhamChaosBag.pullToken(data.campaign, data.difficulty)
         Redirect("/").flashing("token" -> token).withSession("campaign" -> data.campaign, "difficulty" -> data.difficulty)
       }  
     )

@@ -1,6 +1,6 @@
 package helpers
 
-object ArkhamChaos {
+object ArkhamChaosBag {
 
   val specialTokens: Map[Int, String] = Map(-100 -> "Skull", -200 -> "Cultist", -300 -> "Tablet", -400 -> "Cthulhu", -500 -> "Elder Sign" )
   
